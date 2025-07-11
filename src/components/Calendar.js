@@ -1,4 +1,3 @@
-// 📁 src/components/Calendar.js
 import React, { useState, useEffect } from 'react';
 import AppointmentForm from './AppointmentForm';
 
@@ -9,6 +8,8 @@ const Calendar = () => {
   const [appointments, setAppointments] = useState(
     JSON.parse(localStorage.getItem('appointments')) || {}
   );
+  const [filterDoctor, setFilterDoctor] = useState('');
+  const [filterPatient, setFilterPatient] = useState('');
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -52,6 +53,30 @@ const Calendar = () => {
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Appointment Calendar</h2>
 
+      <div className="flex flex-wrap gap-4 mb-4">
+        <select
+          value={filterDoctor}
+          onChange={(e) => setFilterDoctor(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">All Doctors</option>
+          <option value="Dr. Roy">Dr. Roy</option>
+          <option value="Dr. Nisha">Dr. Nisha</option>
+          <option value="Dr. Paul">Dr. Paul</option>
+        </select>
+
+        <select
+          value={filterPatient}
+          onChange={(e) => setFilterPatient(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">All Patients</option>
+          <option value="John Doe">John Doe</option>
+          <option value="Jane Smith">Jane Smith</option>
+          <option value="Alex Thomas">Alex Thomas</option>
+        </select>
+      </div>
+
       {isMobile ? (
         <div>
           <input
@@ -62,23 +87,28 @@ const Calendar = () => {
           {selectedDate && (
             <div className="border p-4 rounded shadow mb-4">
               <p className="font-semibold mb-2">{selectedDate}</p>
-              {(appointments[selectedDate] || []).map((appt, i) => (
-                <div key={i} className="flex justify-between text-sm mb-1">
-                  <span>{appt.time} – {appt.patient}</span>
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => {
-                        setEditingInfo({ date: selectedDate, index: i, data: appt });
-                        setSelectedDate(selectedDate);
-                      }}
-                      className="text-blue-600 text-xs"
-                    >✏️</button>
-                    <button
-                      onClick={() => handleDeleteAppointment(selectedDate, i)}
-                      className="text-red-500 text-xs"
-                    >✕</button>
+              {(appointments[selectedDate] || [])
+                .filter(appt =>
+                  (!filterDoctor || appt.doctor === filterDoctor) &&
+                  (!filterPatient || appt.patient === filterPatient)
+                )
+                .map((appt, i) => (
+                  <div key={i} className="flex justify-between text-sm mb-1">
+                    <span>{appt.time} – {appt.patient}</span>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => {
+                          setEditingInfo({ date: selectedDate, index: i, data: appt });
+                          setSelectedDate(selectedDate);
+                        }}
+                        className="text-blue-600 text-xs"
+                      >✏️</button>
+                      <button
+                        onClick={() => handleDeleteAppointment(selectedDate, i)}
+                        className="text-red-500 text-xs"
+                      >✕</button>
+                    </div>
                   </div>
-                </div>
               ))}
               <button
                 onClick={() => setSelectedDate(selectedDate)}
@@ -98,27 +128,32 @@ const Calendar = () => {
                 onClick={() => setSelectedDate(date)}
               >
                 <p className="text-sm font-semibold">Day {i + 1}</p>
-                {(appointments[date] || []).map((appt, j) => (
-                  <div key={j} className="flex justify-between text-xs mt-1">
-                    <span>{appt.time} – {appt.patient}</span>
-                    <div className="flex gap-1">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditingInfo({ date, index: j, data: appt });
-                          setSelectedDate(date);
-                        }}
-                        className="text-blue-600 text-xs"
-                      >✏️</button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteAppointment(date, j);
-                        }}
-                        className="text-red-500 text-xs"
-                      >✕</button>
+                {(appointments[date] || [])
+                  .filter(appt =>
+                    (!filterDoctor || appt.doctor === filterDoctor) &&
+                    (!filterPatient || appt.patient === filterPatient)
+                  )
+                  .map((appt, j) => (
+                    <div key={j} className="flex justify-between text-xs mt-1">
+                      <span>{appt.time} – {appt.patient}</span>
+                      <div className="flex gap-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingInfo({ date, index: j, data: appt });
+                            setSelectedDate(date);
+                          }}
+                          className="text-blue-600 text-xs"
+                        >✏️</button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteAppointment(date, j);
+                          }}
+                          className="text-red-500 text-xs"
+                        >✕</button>
+                      </div>
                     </div>
-                  </div>
                 ))}
               </div>
             );
