@@ -1,3 +1,4 @@
+// 📁 src/components/Calendar.js
 import React, { useState, useEffect } from 'react';
 import AppointmentForm from './AppointmentForm';
 
@@ -50,14 +51,14 @@ const Calendar = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       <h2 className="text-xl font-bold mb-4">Appointment Calendar</h2>
 
       <div className="flex flex-wrap gap-4 mb-4">
         <select
           value={filterDoctor}
           onChange={(e) => setFilterDoctor(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
         >
           <option value="">All Doctors</option>
           <option value="Dr. Roy">Dr. Roy</option>
@@ -68,7 +69,7 @@ const Calendar = () => {
         <select
           value={filterPatient}
           onChange={(e) => setFilterPatient(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
         >
           <option value="">All Patients</option>
           <option value="John Doe">John Doe</option>
@@ -81,11 +82,11 @@ const Calendar = () => {
         <div>
           <input
             type="date"
-            className="mb-4 border p-2 rounded"
+            className="mb-4 border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
             onChange={(e) => setSelectedDate(e.target.value)}
           />
           {selectedDate && (
-            <div className="border p-4 rounded shadow mb-4">
+            <div className="border p-4 rounded shadow mb-4 bg-white dark:bg-gray-800">
               <p className="font-semibold mb-2">{selectedDate}</p>
               {(appointments[selectedDate] || [])
                 .filter(appt =>
@@ -101,18 +102,18 @@ const Calendar = () => {
                           setEditingInfo({ date: selectedDate, index: i, data: appt });
                           setSelectedDate(selectedDate);
                         }}
-                        className="text-blue-600 text-xs"
+                        className="text-blue-400 text-xs"
                       >✏️</button>
                       <button
                         onClick={() => handleDeleteAppointment(selectedDate, i)}
-                        className="text-red-500 text-xs"
+                        className="text-red-400 text-xs"
                       >✕</button>
                     </div>
                   </div>
               ))}
               <button
                 onClick={() => setSelectedDate(selectedDate)}
-                className="mt-2 text-blue-600 underline"
+                className="mt-2 text-blue-500 underline"
               >Add Appointment</button>
             </div>
           )}
@@ -124,7 +125,7 @@ const Calendar = () => {
             return (
               <div
                 key={i}
-                className="border p-2 rounded h-28 cursor-pointer hover:bg-blue-50"
+                className="border p-2 rounded h-28 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800"
                 onClick={() => setSelectedDate(date)}
               >
                 <p className="text-sm font-semibold">Day {i + 1}</p>
@@ -143,14 +144,14 @@ const Calendar = () => {
                             setEditingInfo({ date, index: j, data: appt });
                             setSelectedDate(date);
                           }}
-                          className="text-blue-600 text-xs"
+                          className="text-blue-400 text-xs"
                         >✏️</button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteAppointment(date, j);
                           }}
-                          className="text-red-500 text-xs"
+                          className="text-red-400 text-xs"
                         >✕</button>
                       </div>
                     </div>
