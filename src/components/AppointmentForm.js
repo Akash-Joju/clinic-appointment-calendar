@@ -6,8 +6,8 @@ const AppointmentForm = ({ onSave, selectedDate, initialData = {}, onCancel }) =
   const [doctor, setDoctor] = useState(initialData.doctor || '');
   const [time, setTime] = useState(initialData.time || '');
 
-  const patients = ['John Doe', 'Jane Smith', 'Alex Thomas'];
-  const doctors = ['Dr. Roy', 'Dr. Nisha', 'Dr. Paul'];
+  const patients = ['Akash', 'Joju', 'Alan'];
+  const doctors = ['Dr. Jayabalan', 'Dr. Nisha', 'Dr. Paul'];
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -1,14 +1,12 @@
+// src/components/Calendar.js
 import React, { useState, useEffect } from 'react';
 import AppointmentForm from './AppointmentForm';
 
 const Calendar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [appointments, setAppointments] = useState(
-    JSON.parse(localStorage.getItem('appointments')) || {}
-  );
+  const [appointments, setAppointments] = useState(JSON.parse(localStorage.getItem('appointments')) || {});
 
-  // Update screen mode on resize
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
