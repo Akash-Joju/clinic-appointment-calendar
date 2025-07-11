@@ -1,4 +1,4 @@
-// src/components/AppointmentForm.js
+// 📁 src/components/AppointmentForm.js
 import React, { useState } from 'react';
 
 const AppointmentForm = ({ onSave, selectedDate, initialData = {}, onCancel }) => {
@@ -6,8 +6,8 @@ const AppointmentForm = ({ onSave, selectedDate, initialData = {}, onCancel }) =
   const [doctor, setDoctor] = useState(initialData.doctor || '');
   const [time, setTime] = useState(initialData.time || '');
 
-  const patients = ['Akash', 'Joju', 'Alan'];
-  const doctors = ['Dr. Jayabalan', 'Dr. Nisha', 'Dr. Paul'];
+  const patients = ['John Doe', 'Jane Smith', 'Alex Thomas'];
+  const doctors = ['Dr. Roy', 'Dr. Nisha', 'Dr. Paul'];
 
   const handleSubmit = (e) => {
     e.preventDefault();

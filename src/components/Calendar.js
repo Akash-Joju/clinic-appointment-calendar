@@ -1,11 +1,14 @@
-// src/components/Calendar.js
+// 📁 src/components/Calendar.js
 import React, { useState, useEffect } from 'react';
 import AppointmentForm from './AppointmentForm';
 
 const Calendar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [appointments, setAppointments] = useState(JSON.parse(localStorage.getItem('appointments')) || {});
+  const [editingInfo, setEditingInfo] = useState(null);
+  const [appointments, setAppointments] = useState(
+    JSON.parse(localStorage.getItem('appointments')) || {}
+  );
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -21,11 +24,28 @@ const Calendar = () => {
   const saveAppointment = (appointment) => {
     const date = appointment.date;
     const updated = { ...appointments };
-    if (!updated[date]) updated[date] = [];
-    updated[date].push(appointment);
+
+    if (editingInfo) {
+      updated[date][editingInfo.index] = appointment;
+    } else {
+      if (!updated[date]) updated[date] = [];
+      updated[date].push(appointment);
+    }
+
     setAppointments(updated);
     localStorage.setItem('appointments', JSON.stringify(updated));
     setSelectedDate(null);
+    setEditingInfo(null);
+  };
+
+  const handleDeleteAppointment = (date, index) => {
+    const updated = { ...appointments };
+    updated[date].splice(index, 1);
+    if (updated[date].length === 0) {
+      delete updated[date];
+    }
+    setAppointments(updated);
+    localStorage.setItem('appointments', JSON.stringify(updated));
   };
 
   return (
@@ -43,16 +63,27 @@ const Calendar = () => {
             <div className="border p-4 rounded shadow mb-4">
               <p className="font-semibold mb-2">{selectedDate}</p>
               {(appointments[selectedDate] || []).map((appt, i) => (
-                <div key={i} className="text-sm mb-1">
-                  {appt.time} – {appt.patient} with {appt.doctor}
+                <div key={i} className="flex justify-between text-sm mb-1">
+                  <span>{appt.time} – {appt.patient}</span>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => {
+                        setEditingInfo({ date: selectedDate, index: i, data: appt });
+                        setSelectedDate(selectedDate);
+                      }}
+                      className="text-blue-600 text-xs"
+                    >✏️</button>
+                    <button
+                      onClick={() => handleDeleteAppointment(selectedDate, i)}
+                      className="text-red-500 text-xs"
+                    >✕</button>
+                  </div>
                 </div>
               ))}
               <button
                 onClick={() => setSelectedDate(selectedDate)}
                 className="mt-2 text-blue-600 underline"
-              >
-                Add Appointment
-              </button>
+              >Add Appointment</button>
             </div>
           )}
         </div>
@@ -68,9 +99,26 @@ const Calendar = () => {
               >
                 <p className="text-sm font-semibold">Day {i + 1}</p>
                 {(appointments[date] || []).map((appt, j) => (
-                  <p key={j} className="text-xs mt-1">
-                    {appt.time} – {appt.patient}
-                  </p>
+                  <div key={j} className="flex justify-between text-xs mt-1">
+                    <span>{appt.time} – {appt.patient}</span>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingInfo({ date, index: j, data: appt });
+                          setSelectedDate(date);
+                        }}
+                        className="text-blue-600 text-xs"
+                      >✏️</button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteAppointment(date, j);
+                        }}
+                        className="text-red-500 text-xs"
+                      >✕</button>
+                    </div>
+                  </div>
                 ))}
               </div>
             );
@@ -81,8 +129,12 @@ const Calendar = () => {
       {selectedDate && (
         <AppointmentForm
           selectedDate={selectedDate}
+          initialData={editingInfo?.data}
           onSave={saveAppointment}
-          onCancel={() => setSelectedDate(null)}
+          onCancel={() => {
+            setSelectedDate(null);
+            setEditingInfo(null);
+          }}
         />
       )}
     </div>
