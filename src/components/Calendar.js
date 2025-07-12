@@ -72,9 +72,9 @@ const Calendar = () => {
           className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
         >
           <option value="">All Patients</option>
-          <option value="John Doe">John Doe</option>
-          <option value="Jane Smith">Jane Smith</option>
-          <option value="Alex Thomas">Alex Thomas</option>
+          <option value="John Doe">Akash</option>
+          <option value="Jane Smith">Akhil</option>
+          <option value="Alex Thomas">Alfin</option>
         </select>
       </div>
 
